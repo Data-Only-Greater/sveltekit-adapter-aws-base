@@ -51,8 +51,11 @@ function](https://kit.svelte.dev/docs/writing-adapters); for example:
 ```ts
 import prepAdapter from 'sveltekit-adapter-aws-base'
 
-/** @param {AdapterSpecificOptions} options */
-export default function (options) {
+export default function ({
+  artifactPath = 'build',
+  esbuildOptions = {},
+  // More options
+  } = {}) {
   /** @type {import('@sveltejs/kit').Adapter} */
   const adapter = {
     name: 'adapter-aws-myiacprovider',
@@ -62,7 +65,7 @@ export default function (options) {
         static_directory, 
         prerendered_directory,
         routes } = await prepAdapter(builder, artifactPath, esbuildOptions)
-      // More
+      // More code
     }
   };
  
