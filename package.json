@@ -20,12 +20,13 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "scripts": {
-    "build": "tsc --excludeFiles test",
+    "build": "yarn clean && tsc --project tsconfig.build.json && yarn copy-files",
     "build:doc": "jsdoc2md --files index.ts --configure ./jsdoc2md.json > index.md",
-    "watch": "tsc -w --excludeFiles test",
+    "clean": "rimraf dist/",
+    "copy-files": "copyfiles lambda/** dist",
+    "watch": "tsc -w",
     "format": "prettier --write .",
-    "test": "vitest",
-    "clean": "tsc --build --clean"
+    "test": "vitest"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",
@@ -33,9 +34,11 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.21.0",
     "@types/fs-extra": "^11.0.1",
+    "copyfiles": "^2.4.1",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-to-markdown": "^8.0.0",
     "prettier": "2.8.4",
+    "rimraf": "^4.4.1",
     "typescript": "^5.0.2",
     "vitest": "^0.29.7"
   },
