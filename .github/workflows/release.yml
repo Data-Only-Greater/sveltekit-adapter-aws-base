@@ -1,8 +1,8 @@
 name: Release
 on:
   workflow_run:
-    workflows: ['Run unit tests']
-    types:
+    workflows: ["Run unit tests"]
+    types: 
       - completed
 jobs:
   release:
@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
       - name: Install dependencies
         run: yarn install
       - name: Release
@@ -28,5 +28,4 @@ jobs:
       - name: Publish
         run: yarn publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
