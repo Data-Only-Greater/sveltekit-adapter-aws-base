@@ -25,13 +25,13 @@ solution, this package provides the following function:
 
 <p>Prepare SvelteKit files for deployment to AWS services</p>
 
-**Kind**: global function  
+**Kind**: global function
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| builder | <code>any</code> |  | <p>The SvelteKit provided [Builder](https://kit.svelte.dev/docs/types#public-types-builder) object</p> |
-| artifactPath | <code>string</code> | <code>&quot;build&quot;</code> | <p>The path where to place to SvelteKit files</p> |
-| esbuildOptions | <code>any</code> |  | <p>Options to pass to esbuild</p> |
+| Param          | Type                | Default                        | Description                                                                                            |
+| -------------- | ------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| builder        | <code>any</code>    |                                | <p>The SvelteKit provided [Builder](https://kit.svelte.dev/docs/types#public-types-builder) object</p> |
+| artifactPath   | <code>string</code> | <code>&quot;build&quot;</code> | <p>The path where to place to SvelteKit files</p>                                                      |
+| esbuildOptions | <code>any</code>    |                                | <p>Options to pass to esbuild</p>                                                                      |
 
 <a name="SiteProps"></a>
 
@@ -40,12 +40,12 @@ solution, this package provides the following function:
 **Kind**: global typedef  
 **Properties**
 
-| Name | Type | Description |
-| --- | --- | --- |
-| server_directory | <code>string</code> | <p>location of files for the SSR server</p> |
-| static_directory | <code>string</code> | <p>location of static page files</p> |
-| prerendered_directory | <code>string</code> | <p>location of prerendered page files</p> |
-| routes | <code>Array.&lt;string&gt;</code> | <p>routes to static and prerendered pages</p> |
+| Name                  | Type                              | Description                                   |
+| --------------------- | --------------------------------- | --------------------------------------------- |
+| server_directory      | <code>string</code>               | <p>location of files for the SSR server</p>   |
+| static_directory      | <code>string</code>               | <p>location of static page files</p>          |
+| prerendered_directory | <code>string</code>               | <p>location of prerendered page files</p>     |
+| routes                | <code>Array.&lt;string&gt;</code> | <p>routes to static and prerendered pages</p> |
 
 The function above should be used within a [SvelteKit adapter
 function](https://kit.svelte.dev/docs/writing-adapters); for example:
@@ -57,21 +57,22 @@ export default function ({
   artifactPath = 'build',
   esbuildOptions = {},
   // More options
-  } = {}) {
+} = {}) {
   /** @type {import('@sveltejs/kit').Adapter} */
   const adapter = {
     name: 'adapter-aws-myiacprovider',
     async adapt(builder) {
       const {
-        server_directory, 
-        static_directory, 
+        server_directory,
+        static_directory,
         prerendered_directory,
-        routes } = await prepAdapter(builder, artifactPath, esbuildOptions)
+        routes,
+      } = await prepAdapter(builder, artifactPath, esbuildOptions)
       // More code
-    }
-  };
- 
-  return adapter;
+    },
+  }
+
+  return adapter
 }
 ```
 

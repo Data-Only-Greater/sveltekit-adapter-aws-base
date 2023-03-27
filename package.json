@@ -16,7 +16,7 @@
     "aws"
   ],
   "author": "Mathew Topper <damm_horse@yahoo.co.uk>",
-  "version": "0.1.0",
+  "version": "0.0.0-semantic-release",
   "main": "./index.js",
   "types": "./index.d.ts",
   "scripts": {
@@ -37,14 +37,14 @@
     "copyfiles": "^2.4.1",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-to-markdown": "^8.0.0",
-    "prettier": "2.8.4",
+    "prettier": "^2.8.4",
     "rimraf": "^4.4.1",
     "typescript": "^5.0.2",
     "vitest": "^0.29.7"
   },
   "dependencies": {
     "@sveltejs/kit": "^1.13.0",
-    "esbuild": "0.17.10",
+    "esbuild": "^0.17.10",
     "fs-extra": "^11.1.1",
     "set-cookie-parser": "^2.5.1",
     "svelte": "^3.57.0",

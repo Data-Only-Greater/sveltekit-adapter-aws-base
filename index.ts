@@ -10,16 +10,16 @@ import {
 } from 'fs-extra'
 import * as esbuild from 'esbuild'
 
-let STUB = 1;
+let STUB = 1
 
 /**
  * @typedef {Object} SiteProps
  * @property {string} server_directory location of files for the SSR server
- * @property {string} static_directory location of static page files 
- * @property {string} prerendered_directory location of prerendered page files 
+ * @property {string} static_directory location of static page files
+ * @property {string} prerendered_directory location of prerendered page files
  * @property {string[]} routes routes to static and prerendered pages
  */
-STUB = 1;
+STUB = 1
 
 type SiteProps = {
   server_directory: string
