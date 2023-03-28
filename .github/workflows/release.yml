@@ -6,7 +6,7 @@ on:
       - completed
 jobs:
   release:
-    name: Release
+    name: Release (${{ github.event.workflow_run.head_commit.id }})
     if: ${{ github.ref_name == 'main' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
