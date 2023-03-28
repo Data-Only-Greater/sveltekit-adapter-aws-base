@@ -3,7 +3,7 @@
 [![Unit tests](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/unit_tests.yml)
 [![Release](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/release.yml/badge.svg)](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/release.yml)
 
-[![codecov](https://codecov.io/github/Data-Only-Greater/sveltekit-adapter-aws-base/branch/main/graph/badge.svg?token=LIENVYALUL)](https://codecov.io/github/Data-Only-Greater/sveltekit-adapter-aws-base)
+[![codecov](https://codecov.io/github/Data-Only-Greater/sveltekit-adapter-aws-base/branch/main/graph/badge.svg?token=LIENVYALUL)](https://app.codecov.io/github/Data-Only-Greater/sveltekit-adapter-aws-base)
 
 # SvelteKit AWS Adapter Base Package
 
