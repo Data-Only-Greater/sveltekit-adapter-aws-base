@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Install semanitc release plugins
-        run: yarn add -D @semantic-release/changelog @semantic-release/git 
+        run: yarn add -D @semantic-release/changelog @semantic-release/git conventional-changelog-conventionalcommits
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
