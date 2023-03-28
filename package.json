@@ -32,7 +32,8 @@
     "copy-files": "copyfiles lambda/** dist",
     "watch": "tsc -w",
     "format": "prettier --write .",
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",
@@ -40,6 +41,7 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.21.0",
     "@types/fs-extra": "^11.0.1",
+    "@vitest/coverage-c8": "^0.29.7",
     "copyfiles": "^2.4.1",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-to-markdown": "^8.0.0",

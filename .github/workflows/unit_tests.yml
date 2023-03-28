@@ -2,7 +2,7 @@ name: Unit tests
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  vitest:
+  test:
     strategy:
       fail-fast: false
       matrix:
@@ -19,3 +19,18 @@ jobs:
       run: yarn install
     - name: Test
       run: yarn run test run --reporter verbose
+  coverage:
+    needs: "test"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: yarn install
+      - name: Generate coverage report
+        run: yarn run coverage
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v3
