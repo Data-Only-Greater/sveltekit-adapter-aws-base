@@ -20,11 +20,13 @@ jobs:
           node-version: "lts/*"
       - name: Install dependencies
         run: yarn install
+      - name: Install semanitc release plugins
+        run: yarn add -D @semantic-release/changelog @semantic-release/git 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx -p @semantic-release/{changelog,git} semantic-release
+        run: npx semantic-release
       - name: Publish
         run: yarn publish
         env:
