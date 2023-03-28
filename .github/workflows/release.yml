@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx -p @semantic-release/{commit-analyzer,release-notes-generator,changelog,npm,github,git} semantic-release
+        run: npx -p @semantic-release/{changelog,git} semantic-release
       - name: Publish
         run: yarn publish
         env:
