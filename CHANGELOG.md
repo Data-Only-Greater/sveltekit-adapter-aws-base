@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.0.0...v1.0.1) (2023-03-28)
+
+
+### Bug Fixes
+
+* update release workflow ([3bb7f3c](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/commit/3bb7f3cbe3dc21581b72479caa01b749ac8d1793))
+
 # 1.0.0 (2023-03-28)
 
 
