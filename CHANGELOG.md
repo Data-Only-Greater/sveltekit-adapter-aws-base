@@ -1,3 +1,11 @@
+## [1.0.3](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.0.2...v1.0.3) (2023-03-28)
+
+
+### Bug Fixes
+
+* typo in semantic-release config ([088b7c3](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/commit/088b7c38613b5a0c4e6cca94becb6cd50d44724c))
+* use semantic-release to publish package ([5a406fe](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/commit/5a406fe3e2802015f5622e1e838d061bb58a69f0))
+
 ## [1.0.2](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.0.1...v1.0.2) (2023-03-28)
 
 
