@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.0.1...v1.0.2) (2023-03-28)
+
+
+### Bug Fixes
+
+* include registry url with node setup ([bdb33a0](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/commit/bdb33a0da601b5e5f063d7a9f2bff876392ebd0b))
+
 ## [1.0.1](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.0.0...v1.0.1) (2023-03-28)
 
 
