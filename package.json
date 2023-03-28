@@ -17,8 +17,14 @@
   ],
   "author": "Mathew Topper <damm_horse@yahoo.co.uk>",
   "version": "0.0.0-semantic-release",
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
   "scripts": {
     "build": "yarn clean && tsc --project tsconfig.build.json && yarn copy-files",
     "build:doc": "jsdoc2md --files index.ts --configure ./jsdoc2md.json > index.md",
