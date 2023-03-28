@@ -1,7 +1,7 @@
 name: Release
 on:
   workflow_run:
-    workflows: ["Run unit tests"]
+    workflows: ["Unit tests"]
     types: 
       - completed
 jobs:
