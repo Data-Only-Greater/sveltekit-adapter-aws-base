@@ -6,7 +6,13 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'lcov'],
       all: true,
-      exclude: ['!tests/mock/lambda', 'tests/mock', 'tests', 'lambda', '*.config.*']
+      exclude: [
+        '!tests/mock/lambda',
+        'tests/mock',
+        'tests',
+        'lambda',
+        '*.config.*',
+      ],
     },
   },
 })

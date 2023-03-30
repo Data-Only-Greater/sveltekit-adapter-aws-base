@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "module": "es2022",
-		"target": "es2022",
-		"moduleResolution": "node",
+    "target": "es2022",
+    "moduleResolution": "node",
     "declaration": true,
     "strict": true,
     "noImplicitAny": true,
@@ -21,8 +21,7 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
     "typeRoots": ["./node_modules/@types"],
-    "types": ["vitest/globals"],
-    "outDir": "dist"
+    "types": ["vitest/globals"]
   },
   "exclude": ["vitest.config.ts", "dist"]
 }
