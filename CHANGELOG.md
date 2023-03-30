@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.1.0...v1.1.1) (2023-03-30)
+
+
+### Bug Fixes
+
+* align tsconfig.build with tsconfig ([55f3192](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/commit/55f3192d5761176349ec70e76545a2383b4e3c55))
+
 # [1.1.0](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.0.3...v1.1.0) (2023-03-30)
 
 
