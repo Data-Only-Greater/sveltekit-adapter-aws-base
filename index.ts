@@ -1,14 +1,12 @@
 import { writeFileSync } from 'fs'
 import { join, dirname } from 'path'
+import * as url from 'url'
 
-import {
-  copyFileSync,
-  unlinkSync,
-  existsSync,
-  mkdirSync,
-  emptyDirSync,
-} from 'fs-extra'
+import pkg from 'fs-extra'
+const { copyFileSync, unlinkSync, existsSync, mkdirSync, emptyDirSync } = pkg
 import * as esbuild from 'esbuild'
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 let STUB = 1
 
