@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.0.3...v1.1.0) (2023-03-30)
+
+
+### Bug Fixes
+
+* move semantic release config to package.json ([18fc275](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/commit/18fc275c0271444248875dce4195fa97a2a8603c))
+
+
+### Features
+
+* switch to es2022 modules ([6b1f180](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/commit/6b1f18091ec9cab726693870cbc49b132e67267b))
+
 ## [1.0.3](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/compare/v1.0.2...v1.0.3) (2023-03-28)
 
 
