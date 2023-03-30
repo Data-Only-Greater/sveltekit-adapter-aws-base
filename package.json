@@ -64,5 +64,33 @@
     "set-cookie-parser": "^2.5.1",
     "svelte": "^3.57.0",
     "vite": "^4.2.1"
+  },
+  "release": {
+    "branches": ["main"],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "conventionalcommits"
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": ["CHANGELOG.md"],
+          "message":
+            "chore(release): set `package.json` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
   }
 }
