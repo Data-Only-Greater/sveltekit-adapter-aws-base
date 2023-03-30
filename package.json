@@ -17,8 +17,15 @@
   ],
   "author": "Mathew Topper <damm_horse@yahoo.co.uk>",
   "version": "0.0.0-semantic-release",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "LICENSE",
