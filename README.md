@@ -1,5 +1,5 @@
 [![npm](https://img.shields.io/npm/v/sveltekit-adapter-aws-base)](https://www.npmjs.com/package/sveltekit-adapter-aws-base)
-![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)
+![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)
 
 [![Unit tests](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/unit_tests.yml)
 [![Release](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/release.yml/badge.svg)](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/release.yml)
