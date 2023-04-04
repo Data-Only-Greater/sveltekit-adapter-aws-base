@@ -88,7 +88,7 @@ export default async function (
   const prerenderedFiles = await builder.writePrerendered(prerendered_directory)
 
   console.log('Building router')
-  copyFileSync(`${__dirname}/files/router.js`, `${edge_directory}/_router.js`)
+  copyFileSync(`${__dirname}/lambda/router.js`, `${edge_directory}/_router.js`)
   let files = JSON.stringify([
     ...getAllFiles(static_directory),
     ...getAllFiles(prerendered_directory),

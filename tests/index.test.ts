@@ -33,23 +33,15 @@ describe('index.ts', async () => {
 
     const {
       server_directory,
+      edge_directory,
       static_directory,
       prerendered_directory,
-      routes,
     } = await index.default(builder, tmpDir)
 
     expect(server_directory).toMatch(path.join(tmpDir, 'server'))
+    expect(edge_directory).toMatch(path.join(tmpDir, 'edge'))
     expect(static_directory).toMatch(path.join(tmpDir, 'assets'))
     expect(prerendered_directory).toMatch(path.join(tmpDir, 'prerendered'))
-    expect(routes).toEqual(['assets/*', 'prerendered/*'])
-
-    const dirents = fs.readdirSync(tmpDir, { withFileTypes: true })
-    const filesNames = dirents
-      .filter((dirent) => dirent.isFile())
-      .map((dirent) => dirent.name)
-
-    expect(filesNames).toHaveLength(1)
-    expect(filesNames).toEqual(['routes.json'])
 
     fs.rmSync(tmpDir, { recursive: true })
   })
