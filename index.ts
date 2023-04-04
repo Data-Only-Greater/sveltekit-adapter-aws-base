@@ -1,6 +1,6 @@
-import { writeFileSync } from 'fs'
-import { join, dirname } from 'path'
+import * as fs from 'fs'
 import * as url from 'url'
+import { join, dirname } from 'path'
 
 import pkg from 'fs-extra'
 const { copyFileSync, unlinkSync, existsSync, mkdirSync, emptyDirSync } = pkg
@@ -13,17 +13,17 @@ let STUB = 1
 /**
  * @typedef {Object} SiteProps
  * @property {string} server_directory location of files for the SSR server
+ * @property {string} edge_directory location of files for the routing edge function
  * @property {string} static_directory location of static page files
  * @property {string} prerendered_directory location of prerendered page files
- * @property {string[]} routes routes to static and prerendered pages
  */
 STUB = 1
 
 type SiteProps = {
   server_directory: string
+  edge_directory: string
   static_directory: string
   prerendered_directory: string
-  routes: string[]
 }
 
 /**
@@ -55,6 +55,11 @@ export default async function (
     mkdirSync(server_directory, { recursive: true })
   }
 
+  const edge_directory = join(artifactPath, 'edge')
+  if (!existsSync(edge_directory)) {
+    mkdirSync(edge_directory, { recursive: true })
+  }
+
   builder.log.minor('Copying asset files.')
   const clientFiles = await builder.writeClient(static_directory)
 
@@ -76,38 +81,58 @@ export default async function (
     banner: esbuildOptions?.banner ?? {},
     bundle: true,
     platform: 'node',
-    target: esbuildOptions?.target ?? 'node16',
-    treeShaking: true,
+    target: esbuildOptions?.target ?? 'node18',
   })
 
   builder.log.minor('Prerendering static pages.')
   const prerenderedFiles = await builder.writePrerendered(prerendered_directory)
 
+  console.log('Building router')
+  copyFileSync(`${__dirname}/files/router.js`, `${edge_directory}/_router.js`)
+  let files = JSON.stringify([
+    ...getAllFiles(static_directory),
+    ...getAllFiles(prerendered_directory),
+  ])
+  fs.writeFileSync(`${edge_directory}/static.js`, `export default ${files}`)
+
+  esbuild.buildSync({
+    entryPoints: [`${edge_directory}/_router.js`],
+    outfile: `${edge_directory}/router.js`,
+    format: 'cjs',
+    bundle: true,
+    platform: 'node',
+  })
+
   builder.log.minor('Cleanup project.')
   unlinkSync(`${server_directory}/_index.js`)
+  unlinkSync(`${edge_directory}/_router.js`)
   unlinkSync(`${artifactPath}/index.js`)
-
-  builder.log.minor('Exporting routes.')
-
-  const routes: string[] = [
-    ...new Set(
-      [...clientFiles, ...prerenderedFiles]
-        .map((x) => {
-          const z = dirname(x)
-          if (z === '.') return x
-          if (z.includes('/')) return undefined
-          return `${z}/*`
-        })
-        .filter(Boolean)
-    ),
-  ]
-
-  writeFileSync(join(artifactPath, 'routes.json'), JSON.stringify(routes))
 
   return {
     server_directory,
+    edge_directory,
     static_directory,
     prerendered_directory,
-    routes,
   }
+}
+
+const getAllFiles = function (
+  dirPath: string,
+  basePath?: string,
+  arrayOfFiles?: string[]
+) {
+  const files = fs.readdirSync(dirPath)
+
+  arrayOfFiles = arrayOfFiles || []
+  basePath = basePath || dirPath
+
+  files.forEach(function (file) {
+    if (fs.statSync(dirPath + '/' + file).isDirectory()) {
+      arrayOfFiles = getAllFiles(dirPath + '/' + file, basePath, arrayOfFiles)
+    } else {
+      arrayOfFiles!.push(join('/', dirPath.replace(basePath!, ''), '/', file))
+    }
+  })
+
+  return arrayOfFiles
 }

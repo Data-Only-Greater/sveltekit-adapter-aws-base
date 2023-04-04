@@ -5,3 +5,4 @@ dist
 coverage
 yarn.lock
 !release.config.js
+!lambda/*.js
