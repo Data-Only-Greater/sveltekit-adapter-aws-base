@@ -17,6 +17,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: yarn install
+      - name: Shim node 16
+        run: yarn add -D node-fetch
+        if: matrix.node-version == 16
       - name: Test
         run: yarn run test run --reporter verbose
   coverage:
