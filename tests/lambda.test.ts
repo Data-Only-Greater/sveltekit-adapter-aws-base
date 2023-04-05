@@ -1,5 +1,9 @@
 import * as fs from 'fs'
 
+if (Number(process.version.match(/^v(\d+\.\d+)/)![1]) < 18) {
+  await import(`${__dirname}/mock/lambda/shims.js`)
+}
+
 const SRC_DIR: string = `${__dirname}/../lambda`
 const DST_DIR: string = `${__dirname}/mock/lambda`
 
@@ -69,10 +73,6 @@ describe('Lambda Server', async () => {
 
     const serverless = await import(`${__dirname}/mock/lambda/serverless.js`)
     
-    if (Number(process.version.match(/^v(\d+\.\d+)/)![1]) < 18) {
-      await import(`${__dirname}/mock/lambda/shims.js`)
-    }
-
     const mockRequest = new Request('http://www.example.com')
     Request = vi.fn(() => mockRequest)
 

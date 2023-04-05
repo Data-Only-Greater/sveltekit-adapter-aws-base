@@ -87,7 +87,7 @@ export default async function (
   builder.log.minor('Prerendering static pages.')
   const prerenderedFiles = await builder.writePrerendered(prerendered_directory)
 
-  console.log('Building router')
+  builder.log.minor('Building router')
   copyFileSync(`${__dirname}/lambda/router.js`, `${edge_directory}/_router.js`)
   let files = JSON.stringify([
     ...getAllFiles(static_directory),
