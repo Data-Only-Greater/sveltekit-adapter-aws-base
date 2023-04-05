@@ -7,6 +7,13 @@ const mockEvent = {
   headers: {
     origin: 'mock',
   },
+  requestContext: {
+    domainName: 'www.example.com',
+    http: {
+      method: "GET"
+    }
+  },
+  rawPath: '/mock'
 }
 
 describe('Lambda Server', async () => {
@@ -67,12 +74,12 @@ describe('Lambda Server', async () => {
 
     const response = await serverless.handler(mockEvent)
 
-    expect(Object.keys(response.headers).length).toBe(1)
-    expect(response.multiValueHeaders['set-cookie'].length).toBe(2)
-    expect(response.multiValueHeaders['set-cookie'][0]).toMatch(
+    expect(Object.keys(response.headers).length).toBe(0)
+    expect(response.cookies.length).toBe(2)
+    expect(response.cookies[0]).toMatch(
       'cookieone=mock'
     )
-    expect(response.multiValueHeaders['set-cookie'][1]).toMatch(
+    expect(response.cookies[1]).toMatch(
       'cookietwo=mock'
     )
   })
@@ -95,10 +102,10 @@ describe('Lambda Server', async () => {
     Request = vi.fn(() => mockRequest)
 
     const response = await serverless.handler(mockEvent)
-
-    expect(Object.keys(response.headers).length).toBe(1)
-    expect(response.multiValueHeaders['set-cookie'].length).toBe(1)
-    expect(response.multiValueHeaders['set-cookie'][0]).toMatch(
+    
+    expect(Object.keys(response.headers).length).toBe(0)
+    expect(response.cookies.length).toBe(1)
+    expect(response.cookies[0]).toMatch(
       'cookieone=mock'
     )
   })
@@ -121,8 +128,8 @@ describe('Lambda Server', async () => {
 
     const response = await serverless.handler(mockEvent)
 
-    expect(Object.keys(response.headers).length).toBe(1)
-    expect(response.multiValueHeaders).not.toHaveProperty('set-cookie')
+    expect(Object.keys(response.headers).length).toBe(0)
+    expect(response.cookies.length).toBe(0)
   })
 
   it('Multiple non set-cookie headers', async () => {
@@ -145,7 +152,7 @@ describe('Lambda Server', async () => {
 
     const response = await serverless.handler(mockEvent)
 
-    expect(Object.keys(response.headers).length).toBe(2)
+    expect(Object.keys(response.headers).length).toBe(1)
     expect(response.headers).toHaveProperty('mock')
     expect(response.headers['mock']).toMatch('mock_one, mock_two')
   })

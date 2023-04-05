@@ -70,9 +70,9 @@ export default function ({
     async adapt(builder) {
       const {
         server_directory,
+        edge_directory,
         static_directory,
-        prerendered_directory,
-        routes,
+        prerendered_directory
       } = await prepAdapter(builder, artifactPath, esbuildOptions)
       // More code
     },

@@ -1,85 +1,46 @@
-import './shims.js'
-import { Server } from '../index.js'
-import { manifest } from '../manifest.js'
-var setCookie = require('set-cookie-parser')
+import { Server } from '../index.js';
+import { manifest } from '../manifest.js';
+import { splitCookiesString } from 'set-cookie-parser';
 
-const server = new Server(manifest)
-const init = server.init({ env: process.env })
+export async function handler(event, context) {
+  const app = new Server(manifest);
+  const { rawPath, headers, rawQueryString, body, requestContext, isBase64Encoded, cookies } = event;
 
-export async function handler(event) {
-  const { path, method } = getVersionRoute[event.version ?? '1.0']?.(event)
-  const queryString = getVersionQueryString[event.version ?? '1.0']?.(event)
-  const { headers, body, isBase64Encoded } = event
-  const encoding = isBase64Encoded
-    ? 'base64'
-    : (headers && headers['content-encoding']) || 'utf-8'
-  const rawBody = typeof body === 'string' ? Buffer.from(body, encoding) : body
-  headers.origin =
-    process.env.ORIGIN ??
-    headers.origin ??
-    `https://${event.requestContext.domainName}`
-  const rawURL = `${headers.origin}${path}${queryString}`
+  const encoding = isBase64Encoded ? 'base64' : headers['content-encoding'] || 'utf-8';
+  const rawBody = typeof body === 'string' ? Buffer.from(body, encoding) : body;
 
-  await init
+  if (cookies) {
+    headers['cookie'] = cookies.join('; ')
+  }
 
-  const rendered = await server.respond(
-    new Request(rawURL, {
-      method,
-      headers: new Headers(headers || {}),
-      body: rawBody,
-    }),
-    {
-      getClientAddress() {
-        return headers.get('x-forwarded-for')
-      },
-    }
-  )
+  let rawURL = `https://${requestContext.domainName}${rawPath}${rawQueryString ? `?${rawQueryString}` : ''}`
 
+  await app.init({
+		env: process.env
+	});
+
+  //Render the app
+  const rendered = await app.respond(new Request(rawURL, {
+    method: requestContext.http.method,
+    headers: new Headers(headers),
+    body: rawBody,
+  }),{
+    platform: { context }
+  });
+
+  //Parse the response into lambda proxy response
   if (rendered) {
     const resp = {
-      statusCode: rendered.status,
-      body: await rendered.text(),
       ...split_headers(rendered.headers),
+      body: await rendered.text(),
+      statusCode: rendered.status
     }
-    resp.headers['Cache-Control'] = 'no-cache'
     return resp
   }
-
   return {
     statusCode: 404,
-    body: 'Not found.',
+    body: 'Not found.'
   }
-}
-
-const getVersionRoute = {
-  '1.0': (event) => ({
-    method: event.httpMethod,
-    path: event.path,
-  }),
-  '2.0': (event) => ({
-    method: event.requestContext.http.method,
-    path: event.requestContext.http.path,
-  }),
-}
-
-const getVersionQueryString = {
-  '1.0': (event) => parseQuery(event.multiValueQueryStringParameters),
-  '2.0': (event) => event.rawQueryString && '?' + event.rawQueryString,
-}
-
-function parseQuery(queryParams) {
-  if (!queryParams) return ''
-  let queryString = '?'
-
-  for (let queryParamKey in queryParams) {
-    for (let queryParamValue of queryParams[queryParamKey]) {
-      if (queryString != '?') {
-        queryString += '&'
-      }
-      queryString += `${queryParamKey}=${queryParamValue}`
-    }
-  }
-  return queryString
 }
 
 // Copyright (c) 2020 [these people](https://github.com/sveltejs/kit/graphs/contributors) (MIT)
@@ -89,27 +50,26 @@ function parseQuery(queryParams) {
  * @param {Headers} headers
  * @returns {{
  *   headers: Record<string, string>,
- *   multiValueHeaders: Record<string, string[]>
+ *   cookies: string[]
  * }}
  */
 export function split_headers(headers) {
   /** @type {Record<string, string>} */
   const h = {}
 
-  /** @type {Record<string, string[]>} */
-  const m = {}
+  /** @type {string[]} */
+  let c = []
 
   headers.forEach((value, key) => {
     if (key === 'set-cookie') {
-      if (!m[key]) m[key] = []
-      m[key].push(...setCookie.splitCookiesString(value))
+      c = c.concat(splitCookiesString(value));
     } else {
       h[key] = value
     }
   })
-
   return {
     headers: h,
-    multiValueHeaders: m,
+    cookies: c,
   }
+
 }
