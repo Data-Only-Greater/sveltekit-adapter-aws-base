@@ -13,7 +13,6 @@ let STUB = 1
 /**
  * @typedef {Object} SiteProps
  * @property {string} server_directory location of files for the SSR server
- * @property {string} edge_directory location of files for the routing edge function
  * @property {string} static_directory location of static page files
  * @property {string} prerendered_directory location of prerendered page files
  */
@@ -21,19 +20,18 @@ STUB = 1
 
 type SiteProps = {
   server_directory: string
-  edge_directory: string
   static_directory: string
   prerendered_directory: string
 }
 
 /**
- * Prepare SvelteKit files for deployment to AWS services
+ * Prepare SvelteKit server files for deployment to AWS services
  * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
  * @param {string} artifactPath The path where to place to SvelteKit files
  * @param {any} esbuildOptions Options to pass to esbuild
  * @returns {Promise<SiteProps>}
  */
-export default async function (
+export async function buildServer (
   builder: any,
   artifactPath: string = 'build',
   esbuildOptions: any = {}
@@ -87,6 +85,74 @@ export default async function (
   builder.log.minor('Prerendering static pages.')
   const prerenderedFiles = await builder.writePrerendered(prerendered_directory)
 
+  builder.log.minor('Cleanup project.')
+  unlinkSync(`${server_directory}/_index.js`)
+  unlinkSync(`${artifactPath}/index.js`)
+
+  return {
+    server_directory,
+    static_directory,
+    prerendered_directory,
+  }
+}
+
+/**
+ * Prepare options handler for deployment to AWS services
+ * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
+ * @param {string} artifactPath The path where to place to SvelteKit files
+ * @returns {Promise<string>}
+ */
+export async function buildOptions (
+  builder: any,
+  artifactPath: string = 'build',
+): Promise<string> {
+
+  const options_directory = join(artifactPath, 'options')
+  if (!existsSync(options_directory)) {
+    mkdirSync(options_directory, { recursive: true })
+  }
+
+  builder.log.minor('Building router')
+  copyFileSync(`${__dirname}/lambda/options.js`, `${options_directory}/_options.js`)
+
+  esbuild.buildSync({
+    entryPoints: [`${options_directory}/_options.js`],
+    outfile: `${options_directory}options.js`,
+    format: 'cjs',
+    bundle: true,
+    platform: 'node',
+  })
+
+  builder.log.minor('Cleanup project.')
+  unlinkSync(`${options_directory}/_options.js`)
+
+  return options_directory
+}
+
+/**
+ * Prepare origin router for deployment to AWS services
+ * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
+ * @param {string} static_directory location of static page files
+ * @param {string} prerendered_directory location of prerendered page files
+ * @param {string} serverURL function URL for the server lambda
+ * @param {string} optionsURL function URL for the options handler lambda
+ * @param {string} artifactPath The path where to place to SvelteKit files
+ * @returns {Promise<string>}
+ */
+export async function buildRouter (
+  builder: any,
+  static_directory: string,
+  prerendered_directory: string,
+  serverURL: string,
+  optionsURL: string,
+  artifactPath: string = 'build',
+): Promise<string> {
+
+  const edge_directory = join(artifactPath, 'edge')
+  if (!existsSync(edge_directory)) {
+    mkdirSync(edge_directory, { recursive: true })
+  }
+
   builder.log.minor('Building router')
   copyFileSync(`${__dirname}/lambda/router.js`, `${edge_directory}/_router.js`)
   let files = JSON.stringify([
@@ -98,22 +164,19 @@ export default async function (
   esbuild.buildSync({
     entryPoints: [`${edge_directory}/_router.js`],
     outfile: `${edge_directory}/router.js`,
+    define: { 
+      'SERVER_URL': serverURL,
+      'OPTIONS_URL': optionsURL
+    },
     format: 'cjs',
     bundle: true,
     platform: 'node',
   })
 
   builder.log.minor('Cleanup project.')
-  unlinkSync(`${server_directory}/_index.js`)
   unlinkSync(`${edge_directory}/_router.js`)
-  unlinkSync(`${artifactPath}/index.js`)
 
-  return {
-    server_directory,
-    edge_directory,
-    static_directory,
-    prerendered_directory,
-  }
+  return edge_directory
 }
 
 const getAllFiles = function (
