@@ -50,6 +50,7 @@ export async function handler(event, context) {
       body: await rendered.text(),
       statusCode: rendered.status,
     }
+    resp.headers['cache-control'] = 'no-cache'
     return resp
   }
   return {
