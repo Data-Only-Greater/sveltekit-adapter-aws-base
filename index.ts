@@ -31,7 +31,7 @@ type SiteProps = {
  * @param {any} esbuildOptions Options to pass to esbuild
  * @returns {Promise<SiteProps>}
  */
-export async function buildServer (
+export async function buildServer(
   builder: any,
   artifactPath: string = 'build',
   esbuildOptions: any = {}
@@ -102,18 +102,20 @@ export async function buildServer (
  * @param {string} artifactPath The path where to place to SvelteKit files
  * @returns {Promise<string>}
  */
-export async function buildOptions (
+export async function buildOptions(
   builder: any,
-  artifactPath: string = 'build',
+  artifactPath: string = 'build'
 ): Promise<string> {
-
   const options_directory = join(artifactPath, 'options')
   if (!existsSync(options_directory)) {
     mkdirSync(options_directory, { recursive: true })
   }
 
   builder.log.minor('Building router')
-  copyFileSync(`${__dirname}/lambda/options.js`, `${options_directory}/_options.js`)
+  copyFileSync(
+    `${__dirname}/lambda/options.js`,
+    `${options_directory}/_options.js`
+  )
 
   esbuild.buildSync({
     entryPoints: [`${options_directory}/_options.js`],
@@ -139,15 +141,14 @@ export async function buildOptions (
  * @param {string} artifactPath The path where to place to SvelteKit files
  * @returns {Promise<string>}
  */
-export async function buildRouter (
+export async function buildRouter(
   builder: any,
   static_directory: string,
   prerendered_directory: string,
   serverURL: string,
   optionsURL: string,
-  artifactPath: string = 'build',
+  artifactPath: string = 'build'
 ): Promise<string> {
-
   const edge_directory = join(artifactPath, 'edge')
   if (!existsSync(edge_directory)) {
     mkdirSync(edge_directory, { recursive: true })
@@ -164,9 +165,9 @@ export async function buildRouter (
   esbuild.buildSync({
     entryPoints: [`${edge_directory}/_router.js`],
     outfile: `${edge_directory}/router.js`,
-    define: { 
-      'SERVER_URL': serverURL,
-      'OPTIONS_URL': optionsURL
+    define: {
+      SERVER_URL: serverURL,
+      OPTIONS_URL: optionsURL,
     },
     format: 'cjs',
     bundle: true,

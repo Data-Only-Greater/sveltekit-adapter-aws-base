@@ -14,10 +14,10 @@ const mockEvent = {
   requestContext: {
     domainName: 'www.example.com',
     http: {
-      method: "GET"
-    }
+      method: 'GET',
+    },
   },
-  rawPath: '/mock'
+  rawPath: '/mock',
 }
 
 describe('Lambda Server', async () => {
@@ -72,7 +72,7 @@ describe('Lambda Server', async () => {
     })
 
     const serverless = await import(`${__dirname}/mock/lambda/serverless.js`)
-    
+
     const mockRequest = new Request('http://www.example.com')
     Request = vi.fn(() => mockRequest)
 
@@ -80,12 +80,8 @@ describe('Lambda Server', async () => {
 
     expect(Object.keys(response.headers).length).toBe(0)
     expect(response.cookies.length).toBe(2)
-    expect(response.cookies[0]).toMatch(
-      'cookieone=mock'
-    )
-    expect(response.cookies[1]).toMatch(
-      'cookietwo=mock'
-    )
+    expect(response.cookies[0]).toMatch('cookieone=mock')
+    expect(response.cookies[1]).toMatch('cookietwo=mock')
   })
 
   it('Single set-cookie header', async () => {
@@ -106,12 +102,10 @@ describe('Lambda Server', async () => {
     Request = vi.fn(() => mockRequest)
 
     const response = await serverless.handler(mockEvent)
-    
+
     expect(Object.keys(response.headers).length).toBe(0)
     expect(response.cookies.length).toBe(1)
-    expect(response.cookies[0]).toMatch(
-      'cookieone=mock'
-    )
+    expect(response.cookies[0]).toMatch('cookieone=mock')
   })
 
   it('No set-cookie header', async () => {

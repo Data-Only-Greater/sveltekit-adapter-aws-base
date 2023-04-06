@@ -31,11 +31,8 @@ describe('index.ts', async () => {
   it('buildServer', async () => {
     const tmpDir = getTempDir()
 
-    const {
-      server_directory,
-      static_directory,
-      prerendered_directory,
-    } = await index.buildServer(builder, tmpDir)
+    const { server_directory, static_directory, prerendered_directory } =
+      await index.buildServer(builder, tmpDir)
 
     expect(server_directory).toMatch(path.join(tmpDir, 'server'))
     expect(static_directory).toMatch(path.join(tmpDir, 'assets'))

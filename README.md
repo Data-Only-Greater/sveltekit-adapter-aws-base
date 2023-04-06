@@ -72,7 +72,7 @@ export default function ({
         server_directory,
         edge_directory,
         static_directory,
-        prerendered_directory
+        prerendered_directory,
       } = await prepAdapter(builder, artifactPath, esbuildOptions)
       // More code
     },
