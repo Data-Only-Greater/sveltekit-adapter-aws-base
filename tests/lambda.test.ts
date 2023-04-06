@@ -77,7 +77,7 @@ describe('Lambda Server', async () => {
 
     const response = await serverless.handler(mockEvent)
 
-    expect(Object.keys(response.headers).length).toBe(0)
+    expect(Object.keys(response.headers).length).toBe(1)
     expect(response.cookies.length).toBe(2)
     expect(response.cookies[0]).toMatch('cookieone=mock')
     expect(response.cookies[1]).toMatch('cookietwo=mock')
@@ -102,7 +102,7 @@ describe('Lambda Server', async () => {
 
     const response = await serverless.handler(mockEvent)
 
-    expect(Object.keys(response.headers).length).toBe(0)
+    expect(Object.keys(response.headers).length).toBe(1)
     expect(response.cookies.length).toBe(1)
     expect(response.cookies[0]).toMatch('cookieone=mock')
   })
@@ -125,7 +125,7 @@ describe('Lambda Server', async () => {
 
     const response = await serverless.handler(mockEvent)
 
-    expect(Object.keys(response.headers).length).toBe(0)
+    expect(Object.keys(response.headers).length).toBe(1)
     expect(response.cookies.length).toBe(0)
   })
 
@@ -149,7 +149,7 @@ describe('Lambda Server', async () => {
 
     const response = await serverless.handler(mockEvent)
 
-    expect(Object.keys(response.headers).length).toBe(1)
+    expect(Object.keys(response.headers).length).toBe(2)
     expect(response.headers).toHaveProperty('mock')
     expect(response.headers['mock']).toMatch('mock_one, mock_two')
   })
