@@ -1,9 +1,5 @@
 import * as fs from 'fs'
 
-if (Number(process.version.match(/^v(\d+\.\d+)/)![1]) < 18) {
-  await import(`${__dirname}/mock/lambda/shims.js`)
-}
-
 const SRC_DIR: string = `${__dirname}/../lambda`
 const DST_DIR: string = `${__dirname}/mock/lambda`
 
@@ -35,7 +31,7 @@ describe('Lambda Server', async () => {
     vi.resetModules()
   })
 
-  beforeAll(() => {
+  beforeAll(async () => {
     fs.mkdirSync(DST_DIR, { recursive: true })
     fs.copyFile(
       `${SRC_DIR}/serverless.js`,
@@ -47,6 +43,9 @@ describe('Lambda Server', async () => {
     fs.copyFile(`${SRC_DIR}/shims.js`, `${DST_DIR}/shims.js`, (err) => {
       if (err) throw err
     })
+    if (Number(process.version.match(/^v(\d+\.\d+)/)![1]) < 18) {
+      await import(`${__dirname}/mock/lambda/shims.js`)
+    }
   })
 
   afterAll(() => {
