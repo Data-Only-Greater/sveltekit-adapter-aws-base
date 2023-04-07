@@ -161,8 +161,8 @@ export async function buildRouter(
     entryPoints: [`${edge_directory}/_router.js`],
     outfile: `${edge_directory}/router.js`,
     define: {
-      SERVER_URL: serverURL,
-      OPTIONS_URL: optionsURL,
+      SERVER_URL: `"${serverURL}"`,
+      OPTIONS_URL: `"${optionsURL}"`,
     },
     format: 'cjs',
     bundle: true,
