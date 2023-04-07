@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as url from 'url'
-import { join, dirname } from 'path'
+import { join, resolve } from 'path'
 
 import pkg from 'fs-extra'
 const { copyFileSync, unlinkSync, existsSync, mkdirSync, emptyDirSync } = pkg
@@ -38,26 +38,21 @@ export async function buildServer(
 ): Promise<SiteProps> {
   emptyDirSync(artifactPath)
 
-  const static_directory = join(artifactPath, 'assets')
+  const static_directory = resolve(artifactPath, 'assets')
   if (!existsSync(static_directory)) {
     mkdirSync(static_directory, { recursive: true })
   }
 
-  const prerendered_directory = join(artifactPath, 'prerendered')
+  const prerendered_directory = resolve(artifactPath, 'prerendered')
   if (!existsSync(prerendered_directory)) {
     mkdirSync(prerendered_directory, { recursive: true })
   }
 
-  const server_directory = join(artifactPath, 'server')
+  const server_directory = resolve(artifactPath, 'server')
   if (!existsSync(server_directory)) {
     mkdirSync(server_directory, { recursive: true })
   }
-
-  const edge_directory = join(artifactPath, 'edge')
-  if (!existsSync(edge_directory)) {
-    mkdirSync(edge_directory, { recursive: true })
-  }
-
+  
   builder.log.minor('Copying asset files.')
   const clientFiles = await builder.writeClient(static_directory)
 
@@ -88,7 +83,7 @@ export async function buildServer(
   builder.log.minor('Cleanup project.')
   unlinkSync(`${server_directory}/_index.js`)
   unlinkSync(`${artifactPath}/index.js`)
-
+  
   return {
     server_directory,
     static_directory,
@@ -106,7 +101,7 @@ export async function buildOptions(
   builder: any,
   artifactPath: string = 'build'
 ): Promise<string> {
-  const options_directory = join(artifactPath, 'options')
+  const options_directory = resolve(artifactPath, 'options')
   if (!existsSync(options_directory)) {
     mkdirSync(options_directory, { recursive: true })
   }
@@ -149,7 +144,7 @@ export async function buildRouter(
   optionsURL: string,
   artifactPath: string = 'build'
 ): Promise<string> {
-  const edge_directory = join(artifactPath, 'edge')
+  const edge_directory = resolve(artifactPath, 'edge')
   if (!existsSync(edge_directory)) {
     mkdirSync(edge_directory, { recursive: true })
   }
