@@ -21,11 +21,11 @@ export async function handler(event, context, callback) {
   if (uri.slice(-1) === '/') {
     const shorturi = uri.substring(0, uri.length - 1)
 
-    if (static_default.includes(shorturi + '/index.html')) {
+    if (staticFiles.includes(shorturi + '/index.html')) {
       callback(null, performReWrite(shorturi + '/index.html', request))
       return
     }
-    if (static_default.includes(shorturi + '.html')) {
+    if (staticFiles.includes(shorturi + '.html')) {
       callback(null, performReWrite(shorturi + '.html', request))
       return
     }
