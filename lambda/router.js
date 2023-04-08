@@ -64,6 +64,8 @@ function performReWrite(uri, request, target) {
     },
   }
   request.headers['host'] = [{ key: 'host', value: domainName }]
+  request.headers["origin"] = `https://${domainName}`
+  request.querystring = encodeURIComponent(request.querystring)
 
   return request
 }
