@@ -31,32 +31,37 @@ export async function handler(event, context) {
     env: process.env,
   })
 
-  //Render the app
-  const rendered = await app.respond(
-    new Request(rawURL, {
-      method: requestContext.http.method,
-      headers: new Headers(headers),
-      body: rawBody,
-    }),
-    {
-      platform: { context },
-    }
-  )
+  // Render the app
+  const request = new Request(rawURL, {
+    method: requestContext.http.method,
+    headers: new Headers(headers),
+    body: rawBody,
+  })
+  console.log(request)
 
-  //Parse the response into lambda proxy response
+  const rendered = await app.respond(request, {
+    platform: { context },
+  })
+
+  // Parse the response into lambda proxy response
+  let response
+
   if (rendered) {
-    const resp = {
+    response = {
       ...split_headers(rendered.headers),
       body: await rendered.text(),
       statusCode: rendered.status,
     }
-    resp.headers['cache-control'] = 'no-cache'
-    return resp
+    response.headers['cache-control'] = 'no-cache'
+  } else {
+    response = {
+      statusCode: 404,
+      body: 'Not found.',
+    }
   }
-  return {
-    statusCode: 404,
-    body: 'Not found.',
-  }
+  console.log(response)
+
+  return response
 }
 
 // Copyright (c) 2020 [these people](https://github.com/sveltejs/kit/graphs/contributors) (MIT)
