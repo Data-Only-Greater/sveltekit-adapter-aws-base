@@ -18,17 +18,20 @@ export async function handler(event, context, callback) {
   }
 
   // Remove the trailing slash (if any) to normalise the path
-  if (uri.slice(-1) === '/') {
-    const shorturi = uri.substring(0, uri.length - 1)
+  let uriBase = uri
 
-    if (staticFiles.includes(shorturi + '/index.html')) {
-      callback(null, performReWrite(shorturi + '/index.html', request))
-      return
-    }
-    if (staticFiles.includes(shorturi + '.html')) {
-      callback(null, performReWrite(shorturi + '.html', request))
-      return
-    }
+  if (uri.slice(-1) === '/') {
+    uriBase = uri.substring(0, uri.length - 1)
+  }
+
+  if (staticFiles.includes(uriBase + '/index.html')) {
+    callback(null, performReWrite(uriBase + '/index.html', request))
+    return
+  }
+
+  if (staticFiles.includes(uriBase + '.html')) {
+    callback(null, performReWrite(uriBase + '.html', request))
+    return
   }
 
   callback(null, performReWrite(uri, request, 'server'))
@@ -64,7 +67,9 @@ function performReWrite(uri, request, target) {
     },
   }
   request.headers['host'] = [{ key: 'host', value: domainName }]
-  request.headers["origin"] = [{ key: "origin", value: `https://${domainName}` }]
+  request.headers['origin'] = [
+    { key: 'origin', value: `https://${domainName}` },
+  ]
   request.querystring = encodeURIComponent(request.querystring)
 
   return request
