@@ -1,3 +1,8 @@
+const { HttpRequest } = require("@aws-sdk/protocol-http");
+const { defaultProvider } = require("@aws-sdk/credential-provider-node");
+const { SignatureV4 } = require("@aws-sdk/signature-v4");
+import { Sha256 } from '@aws-crypto/sha256-js';
+
 import staticFiles from './static.js'
 
 export async function handler(event, context, callback) {
@@ -71,6 +76,28 @@ function performReWrite(uri, request, target) {
     { key: 'origin', value: `https://${domainName}` },
   ]
   request.querystring = encodeURIComponent(request.querystring)
+  
+  const dummyRequest = new HttpRequest({
+    body: atob(request['body']['data']),
+    headers: {v[0]['key']:v[0]['value'] for k,v in headers.items()},
+    hostname: domainName,
+    method: request.method,
+    path: request.uri
+  });
+  
+  const domainSegments = domainName.split('.')
+  const region = domainSegments[2]
+  
+  const signer = new SignatureV4({
+    credentials: defaultProvider(),
+    region: region,
+    service: 'lambda',
+    sha256: Sha256,
+  });
+  
+  const signedRequest = await signer.sign(dummyRequest);
+  signed_headers=dict(req.headers.items())
+  request['headers'] = { k.lower():[{'key':k,'value':v}] for k,v in signed_headers.items() }
 
   return request
 }
