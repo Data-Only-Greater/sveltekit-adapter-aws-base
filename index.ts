@@ -115,6 +115,7 @@ export async function buildOptions(
   esbuild.buildSync({
     entryPoints: [`${options_directory}/_options.js`],
     outfile: `${options_directory}/options.js`,
+    external: ['node:*'],
     format: 'cjs',
     bundle: true,
     platform: 'node',
@@ -164,6 +165,7 @@ export async function buildRouter(
       SERVER_URL: `"${serverURL}"`,
       OPTIONS_URL: `"${optionsURL}"`,
     },
+    external: ['node:*', '@aws-sdk', '@aws-crypto'],
     format: 'cjs',
     bundle: true,
     platform: 'node',

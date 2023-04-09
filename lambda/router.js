@@ -77,9 +77,15 @@ function performReWrite(uri, request, target) {
   ]
   request.querystring = encodeURIComponent(request.querystring)
   
-  const dummyRequest = new HttpRequest({
+  const headersToSign = {}
+  
+  for (const v of Object.values(request.headers)) {
+    headersToSign[v[0]['key']] = v[0]['value']
+  }
+  
+  const requestToSign = new HttpRequest({
     body: atob(request['body']['data']),
-    headers: {v[0]['key']:v[0]['value'] for k,v in headers.items()},
+    headers: headersToSign,
     hostname: domainName,
     method: request.method,
     path: request.uri
@@ -95,9 +101,17 @@ function performReWrite(uri, request, target) {
     sha256: Sha256,
   });
   
-  const signedRequest = await signer.sign(dummyRequest);
-  signed_headers=dict(req.headers.items())
-  request['headers'] = { k.lower():[{'key':k,'value':v}] for k,v in signed_headers.items() }
+  const signedRequest = await signer.sign(requestToSign)
+  const cloudFrontHeaders = {}
+  
+  for (const [k, v] of Object.entries(signedRequest.headers)) {
+    cloudFrontHeaders[k.toLowerCase()] = [{
+      'key': k,
+      'value': v
+    }]
+  }
+  
+  request['headers'] = cloudFrontHeaders
 
   return request
 }
