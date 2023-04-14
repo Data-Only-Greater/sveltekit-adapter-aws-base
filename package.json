@@ -37,7 +37,6 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@aws-crypto/sha256-js": "^4.0.0",
     "@aws-sdk/credential-provider-node": "^3.309.0",
     "@aws-sdk/protocol-http": "^3.306.0",
     "@aws-sdk/signature-v4": "^3.306.0",
@@ -56,6 +55,7 @@
     "vitest": "^0.29.7"
   },
   "dependencies": {
+    "@aws-crypto/sha256-js": "^4.0.0",
     "@sveltejs/kit": "^1.13.0",
     "esbuild": "^0.17.10",
     "fs-extra": "^11.1.1",
