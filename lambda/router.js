@@ -42,7 +42,7 @@ export async function handler(event, context, callback) {
   callback(null, performReWrite(uri, request, 'server'))
 }
 
-function performReWrite(uri, request, target) {
+async function performReWrite(uri, request, target) {
   request.uri = uri
 
   if (typeof target === 'undefined') {
