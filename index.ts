@@ -165,7 +165,7 @@ export async function buildRouter(
       SERVER_URL: `"${serverURL}"`,
       OPTIONS_URL: `"${optionsURL}"`,
     },
-    external: ['node:*', '@aws-sdk', '@aws-crypto'],
+    external: ['node:*', '@aws-sdk'],
     format: 'cjs',
     bundle: true,
     platform: 'node',
