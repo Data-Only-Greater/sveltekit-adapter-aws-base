@@ -6,14 +6,16 @@ import { Sha256 } from '@aws-crypto/sha256-js';
 import staticFiles from './static.js'
 
 export async function handler(event, context, callback) {
-  const request = event.Records[0].cf.request
+  let request = event.Records[0].cf.request
   const uri = request.uri
 
   if (request.method === 'OPTIONS') {
-    callback(null, performReWrite(uri, request, 'options'))
+    request = await performReWrite(uri, request, 'options')
+    callback(null, request)
     return
   } else if (request.method !== 'GET') {
-    callback(null, performReWrite(uri, request, 'server'))
+    request = await performReWrite(uri, request, 'server')
+    callback(null, request)
     return
   }
 
@@ -30,16 +32,19 @@ export async function handler(event, context, callback) {
   }
 
   if (staticFiles.includes(uriBase + '/index.html')) {
-    callback(null, performReWrite(uriBase + '/index.html', request))
+    request = await performReWrite(uriBase + '/index.html', request)
+    callback(null, request)
     return
   }
 
   if (staticFiles.includes(uriBase + '.html')) {
-    callback(null, performReWrite(uriBase + '.html', request))
+    request = await performReWrite(uriBase + '.html', request)
+    callback(null, request)
     return
   }
-
-  callback(null, performReWrite(uri, request, 'server'))
+  
+  request = await performReWrite(uri, request, 'server')
+  callback(null, request)
 }
 
 async function performReWrite(uri, request, target) {
