@@ -1,7 +1,7 @@
-const { HttpRequest } = require("@aws-sdk/protocol-http");
-const { defaultProvider } = require("@aws-sdk/credential-provider-node");
-const { SignatureV4 } = require("@aws-sdk/signature-v4");
-import { Sha256 } from '@aws-crypto/sha256-js';
+const { HttpRequest } = require('@aws-sdk/protocol-http')
+const { defaultProvider } = require('@aws-sdk/credential-provider-node')
+const { SignatureV4 } = require('@aws-sdk/signature-v4')
+import { Sha256 } from '@aws-crypto/sha256-js'
 
 import staticFiles from './static.js'
 
@@ -42,7 +42,7 @@ export async function handler(event, context, callback) {
     callback(null, request)
     return
   }
-  
+
   request = await performReWrite(uri, request, 'server')
   callback(null, request)
 }
@@ -80,42 +80,76 @@ async function performReWrite(uri, request, target) {
   request.headers['origin'] = [
     { key: 'origin', value: `https://${domainName}` },
   ]
-  request.querystring = encodeURIComponent(request.querystring)
-  
+
+  const searchParams = new URLSearchParams(request.querystring)
+  const queryMap = {}
+
+  for (const key of searchParams.keys()) {
+    queryMap[key] = searchParams.get(key) || ''
+  }
+
+  let queryString = ''
+  let queryComponent
+
+  for (const [k, v] of Object.entries(queryMap)) {
+    queryComponent = encodeURIComponent(k) + '=' + encodeURIComponent(v)
+    if (queryString.length === 0) {
+      queryString += queryComponent
+    } else {
+      queryString += '&' + queryComponent
+    }
+  }
+
+  request.querystring = queryString
+
   const headersToSign = {}
-  
+
   for (const v of Object.values(request.headers)) {
+    if (v[0]['key'] === 'X-Forwarded-For') {
+      continue
+    }
     headersToSign[v[0]['key']] = v[0]['value']
   }
-  
+
+  let body = ''
+
+  if (request.body && request.body.data && request.body.encoding === 'base64') {
+    body = Buffer.from(request.body.data, 'base64')
+  } else if (request.body && request.body.data) {
+    body = request.body.data
+  }
+
   const requestToSign = new HttpRequest({
-    body: atob(request['body']['data']),
+    body: body,
     headers: headersToSign,
     hostname: domainName,
     method: request.method,
-    path: request.uri
-  });
-  
+    path: request.uri,
+    query: queryMap,
+  })
+
   const domainSegments = domainName.split('.')
   const region = domainSegments[2]
-  
+
   const signer = new SignatureV4({
     credentials: defaultProvider(),
     region: region,
     service: 'lambda',
     sha256: Sha256,
-  });
-  
+  })
+
   const signedRequest = await signer.sign(requestToSign)
   const cloudFrontHeaders = {}
-  
+
   for (const [k, v] of Object.entries(signedRequest.headers)) {
-    cloudFrontHeaders[k.toLowerCase()] = [{
-      'key': k,
-      'value': v
-    }]
+    cloudFrontHeaders[k.toLowerCase()] = [
+      {
+        key: k,
+        value: v,
+      },
+    ]
   }
-  
+
   request['headers'] = cloudFrontHeaders
 
   return request
