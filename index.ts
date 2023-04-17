@@ -114,7 +114,7 @@ export async function buildOptions(
 
   esbuild.buildSync({
     entryPoints: [`${options_directory}/_options.js`],
-    outfile: `${options_directory}/options.js`,
+    outfile: `${options_directory}/index.js`,
     external: ['node:*'],
     format: 'cjs',
     bundle: true,
