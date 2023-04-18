@@ -28,7 +28,7 @@ export async function handler(event, context) {
       ? process.env['ORIGIN']
       : `https://${requestContext.domainName}`
 
-  let rawURL = `https://${requestContext.domainName}${rawPath}${
+  let rawURL = `${origin}${rawPath}${
     rawQueryString ? `?${rawQueryString}` : ''
   }`
 
