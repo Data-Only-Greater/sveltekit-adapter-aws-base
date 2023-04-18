@@ -77,9 +77,6 @@ async function performReWrite(uri, request, target) {
     },
   }
   request.headers['host'] = [{ key: 'host', value: domainName }]
-  request.headers['origin'] = [
-    { key: 'origin', value: `https://${domainName}` },
-  ]
 
   const searchParams = new URLSearchParams(request.querystring)
   const queryMap = {}

@@ -23,6 +23,11 @@ export async function handler(event, context) {
     headers['cookie'] = cookies.join('; ')
   }
 
+  const origin =
+    'ORIGIN' in process.env
+      ? process.env['ORIGIN']
+      : `https://${requestContext.domainName}`
+
   let rawURL = `https://${requestContext.domainName}${rawPath}${
     rawQueryString ? `?${rawQueryString}` : ''
   }`
