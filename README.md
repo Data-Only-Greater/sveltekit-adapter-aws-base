@@ -42,7 +42,7 @@ authentication. If the S3 origin is also secured with OAC, then all origins
 will only be accessible through the CDN.
 
 The functions provided by this package implement the SSR server, options
-handler and lambda@edge router. The are defined as follows:
+handler and lambda@edge router. They are defined as follows:
 
 <dl>
 <dt><a href="#buildServer">buildServer(builder, artifactPath, esbuildOptions)</a> ⇒ <code><a href="#SiteProps">Promise.&lt;SiteProps&gt;</a></code></dt>
