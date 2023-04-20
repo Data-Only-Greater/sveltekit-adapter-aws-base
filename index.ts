@@ -27,9 +27,12 @@ type SiteProps = {
 /**
  * Prepare SvelteKit SSR server files for deployment to AWS services.
  *
- * Note that the ORIGIN environment variable can be set to rewrite the URL
- * request origin prior to rendering with sveltekit. This prevents CORS
- * errors caused by redirects.
+ * To determine the URL request origin the server uses the following hierarchy:
+ * + The ORIGIN environment variable
+ * + The value of the 'X-Forwarded-Host' header
+ * + The domain name within the request event
+ *
+ * The origin value is important to prevent CORS errors.
  *
  * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
  * @param {string} artifactPath The path where to place to SvelteKit files
@@ -134,6 +137,10 @@ export async function buildOptions(
 
 /**
  * Prepare lambda@edge origin router for deployment to AWS services
+ *
+ * Note that this function will forward the original Host header as
+ * 'X-Forwarded-Host' to the lambda URLs.
+ *
  * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
  * @param {string} static_directory location of static page files
  * @param {string} prerendered_directory location of prerendered page files

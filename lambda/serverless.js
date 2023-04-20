@@ -23,10 +23,13 @@ export async function handler(event, context) {
     headers['cookie'] = cookies.join('; ')
   }
 
+  const domainName =
+    'x-forwarded-host' in headers
+      ? headers['x-forwarded-host']
+      : requestContext.domainName
+
   const origin =
-    'ORIGIN' in process.env
-      ? process.env['ORIGIN']
-      : `https://${requestContext.domainName}`
+    'ORIGIN' in process.env ? process.env['ORIGIN'] : `https://${domainName}`
 
   let rawURL = `${origin}${rawPath}${
     rawQueryString ? `?${rawQueryString}` : ''

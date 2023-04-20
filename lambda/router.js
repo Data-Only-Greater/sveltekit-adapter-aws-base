@@ -76,6 +76,12 @@ async function performReWrite(uri, request, target) {
       customHeaders: {},
     },
   }
+  request.headers['x-forwarded-host'] = [
+    {
+      key: 'X-Forwarded-Host',
+      value: request.headers['host'][0].value,
+    },
+  ]
   request.headers['host'] = [{ key: 'host', value: domainName }]
 
   const searchParams = new URLSearchParams(request.querystring)

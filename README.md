@@ -58,9 +58,13 @@ handler and lambda@edge router. They are defined as follows:
 ### buildServer(builder, artifactPath, esbuildOptions) ⇒ [<code>Promise.&lt;SiteProps&gt;</code>](#SiteProps)
 
 <p>Prepare SvelteKit SSR server files for deployment to AWS services.</p>
-<p>Note that the ORIGIN environment variable can be set to rewrite the URL
-request origin prior to rendering with sveltekit. This prevents CORS
-errors caused by redirects.</p>
+<p>To determine the URL request origin the server uses the following hierarchy:</p>
+<ul>
+<li>The ORIGIN environment variable</li>
+<li>The value of the 'X-Forwarded-Host' header</li>
+<li>The domain name within the request event</li>
+</ul>
+<p>The origin value is important to prevent CORS errors.</p>
 
 **Kind**: global function
 
@@ -89,6 +93,8 @@ errors caused by redirects.</p>
 ### buildRouter(builder, static_directory, prerendered_directory, serverURL, optionsURL, artifactPath) ⇒ <code>Promise.&lt;string&gt;</code>
 
 <p>Prepare lambda@edge origin router for deployment to AWS services</p>
+<p>Note that this function will forward the original Host header as
+'X-Forwarded-Host' to the lambda URLs.</p>
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;string&gt;</code> - Location of files for the origin router
