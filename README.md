@@ -32,7 +32,7 @@ For developers of AWS SvelteKit adapters that wish to implement a new IAC
 solution, this package provides functions for implementing the following
 reference architecture:
 
-![Architecture](architecture.png)
+![Architecture](architecture.svg)
 
 The lambda@edge function handles origin requests from a Cloudfront CDN that has
 a default S3 origin for static files and two lambda function URLs for the SSR
