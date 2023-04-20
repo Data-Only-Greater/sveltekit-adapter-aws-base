@@ -1,5 +1,5 @@
 [![npm](https://img.shields.io/npm/v/sveltekit-adapter-aws-base)](https://www.npmjs.com/package/sveltekit-adapter-aws-base)
-![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)
+![stability-alpha](https://img.shields.io/badge/stability-alpha-f4d03f.svg)
 
 [![Unit tests](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/unit_tests.yml)
 [![Release](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/release.yml/badge.svg)](https://github.com/Data-Only-Greater/sveltekit-adapter-aws-base/actions/workflows/release.yml)
@@ -8,8 +8,14 @@
 
 # SvelteKit AWS Adapter Base Package
 
-This project is the base package for SvelteKit adapters which deploy SvelteKit
-to AWS using various IAC providers.
+This project is for the use of SvelteKit adapters which deploy to AWS using
+various IAC providers. It provides functions common to a reference AWS
+architecture.
+
+The project is in development and is seeking collaborators to develop
+implementations for IAC providers. See the [examples](#Examples) section for
+the IAC providers that are currently supported. Please feel free to open an
+issue if you would like to discuss using or developing this package.
 
 ## Installation
 
@@ -23,13 +29,38 @@ This package is not intended for end-user usage. Please use one of the
 consumers of this package in the [example IAC providers](#Examples) section.
 
 For developers of AWS SvelteKit adapters that wish to implement a new IAC
-solution, this package provides the following function:
+solution, this package provides functions for implementing the following
+reference architecture:
 
-<a name="_default"></a>
+![Architecture](architecture.png)
 
-### \_default(builder, artifactPath, esbuildOptions) ⇒ [<code>Promise.&lt;SiteProps&gt;</code>](#SiteProps)
+The lambda@edge function handles origin requests from a Cloudfront CDN that has
+a default S3 origin for static files and two lambda function URLs for the SSR
+server and an OPTIONS request handler (for preflight CORS checks). The router
+signs requests to the lambda URLs, thus they can be configured to use AWS_IAM
+authentication. If the S3 origin is also secured with OAC, then all origins
+will only be accessible through the CDN.
 
-<p>Prepare SvelteKit files for deployment to AWS services</p>
+The functions provided by this package implement the SSR server, options
+handler and lambda@edge router. The are defined as follows:
+
+<dl>
+<dt><a href="#buildServer">buildServer(builder, artifactPath, esbuildOptions)</a> ⇒ <code><a href="#SiteProps">Promise.&lt;SiteProps&gt;</a></code></dt>
+<dd><p>Prepare SvelteKit SSR server files for deployment to AWS services</p></dd>
+<dt><a href="#buildOptions">buildOptions(builder, artifactPath)</a> ⇒ <code>Promise.&lt;string&gt;</code></dt>
+<dd><p>Prepare options handler for deployment to AWS services</p></dd>
+<dt><a href="#buildRouter">buildRouter(builder, static_directory, prerendered_directory, serverURL, optionsURL, artifactPath)</a> ⇒ <code>Promise.&lt;string&gt;</code></dt>
+<dd><p>Prepare lambda@edge origin router for deployment to AWS services</p></dd>
+</dl>
+
+<a name="buildServer"></a>
+
+### buildServer(builder, artifactPath, esbuildOptions) ⇒ [<code>Promise.&lt;SiteProps&gt;</code>](#SiteProps)
+
+<p>Prepare SvelteKit SSR server files for deployment to AWS services.</p>
+<p>Note that the ORIGIN environment variable can be set to rewrite the URL
+request origin prior to rendering with sveltekit. This prevents CORS
+errors caused by redirects.</p>
 
 **Kind**: global function
 
@@ -39,6 +70,38 @@ solution, this package provides the following function:
 | artifactPath   | <code>string</code> | <code>&quot;build&quot;</code> | <p>The path where to place to SvelteKit files</p>                                                      |
 | esbuildOptions | <code>any</code>    |                                | <p>Options to pass to esbuild</p>                                                                      |
 
+<a name="buildOptions"></a>
+
+### buildOptions(builder, artifactPath) ⇒ <code>Promise.&lt;string&gt;</code>
+
+<p>Prepare options handler for deployment to AWS services</p>
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;string&gt;</code> - Location of files for the options handler
+
+| Param        | Type                | Default                        | Description                                                                                            |
+| ------------ | ------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| builder      | <code>any</code>    |                                | <p>The SvelteKit provided [Builder](https://kit.svelte.dev/docs/types#public-types-builder) object</p> |
+| artifactPath | <code>string</code> | <code>&quot;build&quot;</code> | <p>The path where to place to SvelteKit files</p>                                                      |
+
+<a name="buildRouter"></a>
+
+### buildRouter(builder, static_directory, prerendered_directory, serverURL, optionsURL, artifactPath) ⇒ <code>Promise.&lt;string&gt;</code>
+
+<p>Prepare lambda@edge origin router for deployment to AWS services</p>
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;string&gt;</code> - Location of files for the origin router
+
+| Param                 | Type                | Default                        | Description                                                                                            |
+| --------------------- | ------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| builder               | <code>any</code>    |                                | <p>The SvelteKit provided [Builder](https://kit.svelte.dev/docs/types#public-types-builder) object</p> |
+| static_directory      | <code>string</code> |                                | <p>location of static page files</p>                                                                   |
+| prerendered_directory | <code>string</code> |                                | <p>location of prerendered page files</p>                                                              |
+| serverURL             | <code>string</code> |                                | <p>function URL for the server lambda</p>                                                              |
+| optionsURL            | <code>string</code> |                                | <p>function URL for the options handler lambda</p>                                                     |
+| artifactPath          | <code>string</code> | <code>&quot;build&quot;</code> | <p>The path where to place to SvelteKit files</p>                                                      |
+
 <a name="SiteProps"></a>
 
 ### SiteProps : <code>Object</code>
@@ -46,18 +109,21 @@ solution, this package provides the following function:
 **Kind**: global typedef  
 **Properties**
 
-| Name                  | Type                | Description                                            |
-| --------------------- | ------------------- | ------------------------------------------------------ |
-| server_directory      | <code>string</code> | <p>location of files for the SSR server</p>            |
-| edge_directory        | <code>string</code> | <p>location of files for the routing edge function</p> |
-| static_directory      | <code>string</code> | <p>location of static page files</p>                   |
-| prerendered_directory | <code>string</code> | <p>location of prerendered page files</p>              |
+| Name                  | Type                | Description                                 |
+| --------------------- | ------------------- | ------------------------------------------- |
+| server_directory      | <code>string</code> | <p>location of files for the SSR server</p> |
+| static_directory      | <code>string</code> | <p>location of static page files</p>        |
+| prerendered_directory | <code>string</code> | <p>location of prerendered page files</p>   |
 
-The function above should be used within a [SvelteKit adapter
+The functions above should be used within a [SvelteKit adapter
 function](https://kit.svelte.dev/docs/writing-adapters); for example:
 
 ```ts
-import prepAdapter from 'sveltekit-adapter-aws-base'
+import {
+  buildServer,
+  buildOptions,
+  buildRouter,
+} from 'sveltekit-adapter-aws-base'
 
 export default function ({
   artifactPath = 'build',
@@ -68,13 +134,37 @@ export default function ({
   const adapter = {
     name: 'adapter-aws-myiacprovider',
     async adapt(builder) {
-      const {
-        server_directory,
-        edge_directory,
-        static_directory,
-        prerendered_directory,
-      } = await prepAdapter(builder, artifactPath, esbuildOptions)
-      // More code
+      const { serverDirectory, staticDirectory, prerenderedDirectory } =
+        await buildServer(builder, artifactPath, esbuildOptions)
+      const optionsDirectory = await buildOptions(builder, artifactPath)
+
+      // Deploy server to lambda and get domain name of URL. These can use
+      // AWS_IAM AuthType, as the router will sign requests.
+      const serverDomain = getLambdaURLDomain(server_directory)
+      const optionsDomain = getLambdaURLDomain(server_directory)
+
+      const edgeDirectory = await buildRouter(
+        builder,
+        staticDirectory,
+        prerenderedDirectory,
+        serverDomain,
+        optionsDomain,
+        artifactPath
+      )
+
+      // Deploy router to lambda and get its arn
+      const routerArn = getLambdaArn(edgeDirectory)
+
+      // Upload static files to S3
+      const myBucket = deployS3(staticDirectory, prerenderedDirectory)
+
+      // Deploy a CloudFront CDN with the S3 bucket as the default origin
+      // (with OAC for added security) and the lambda@edge function to handle
+      // origin-requests.
+      const CDN = deployCDN({
+        defaultOriginBucket: myBucket,
+        defaultCacheBehaviourOriginRequestHandler: routerArn,
+      })
     },
   }
 

@@ -1,5 +1,6 @@
 *.d.ts
 *.js
+*.bkp
 node_modules
 dist
 coverage

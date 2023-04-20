@@ -25,7 +25,12 @@ type SiteProps = {
 }
 
 /**
- * Prepare SvelteKit server files for deployment to AWS services
+ * Prepare SvelteKit SSR server files for deployment to AWS services.
+ *
+ * Note that the ORIGIN environment variable can be set to rewrite the URL
+ * request origin prior to rendering with sveltekit. This prevents CORS
+ * errors caused by redirects.
+ *
  * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
  * @param {string} artifactPath The path where to place to SvelteKit files
  * @param {any} esbuildOptions Options to pass to esbuild
@@ -95,7 +100,7 @@ export async function buildServer(
  * Prepare options handler for deployment to AWS services
  * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
  * @param {string} artifactPath The path where to place to SvelteKit files
- * @returns {Promise<string>}
+ * @returns {Promise<string>} Location of files for the options handler
  */
 export async function buildOptions(
   builder: any,
@@ -128,14 +133,14 @@ export async function buildOptions(
 }
 
 /**
- * Prepare origin router for deployment to AWS services
+ * Prepare lambda@edge origin router for deployment to AWS services
  * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
  * @param {string} static_directory location of static page files
  * @param {string} prerendered_directory location of prerendered page files
  * @param {string} serverURL function URL for the server lambda
  * @param {string} optionsURL function URL for the options handler lambda
  * @param {string} artifactPath The path where to place to SvelteKit files
- * @returns {Promise<string>}
+ * @returns {Promise<string>} Location of files for the origin router
  */
 export async function buildRouter(
   builder: any,
