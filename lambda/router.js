@@ -20,6 +20,7 @@ export async function handler(event, context, callback) {
   }
 
   if (staticFiles.includes(uri)) {
+    request = await performReWrite(uri, request)
     callback(null, request)
     return
   }
@@ -51,6 +52,9 @@ async function performReWrite(uri, request, target) {
   request.uri = uri
 
   if (typeof target === 'undefined') {
+    request.headers['host'] = [
+      { key: 'host', value: request.origin.s3.domainName },
+    ]
     return request
   }
 
