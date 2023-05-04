@@ -37,12 +37,14 @@ type SiteProps = {
  * @param {any} builder The SvelteKit provided [Builder]{@link https://kit.svelte.dev/docs/types#public-types-builder} object
  * @param {string} artifactPath The path where to place to SvelteKit files
  * @param {any} esbuildOptions Options to pass to esbuild
+ * @param {boolean} streaming Use Lambda response streaming
  * @returns {Promise<SiteProps>}
  */
 export async function buildServer(
   builder: any,
   artifactPath: string = 'build',
-  esbuildOptions: any = {}
+  esbuildOptions: any = {},
+  streaming: boolean = false
 ): Promise<SiteProps> {
   emptyDirSync(artifactPath)
 
@@ -66,10 +68,13 @@ export async function buildServer(
 
   builder.log.minor('Copying server files.')
   await builder.writeServer(artifactPath)
-  copyFileSync(
-    `${__dirname}/lambda/serverless.js`,
-    `${server_directory}/_index.js`
-  )
+
+  let serverlessPath = `${__dirname}/lambda/serverless.js`
+  if (streaming) {
+    serverlessPath = `${__dirname}/lambda/serverless_streaming.js`
+  }
+
+  copyFileSync(serverlessPath, `${server_directory}/_index.js`)
   copyFileSync(`${__dirname}/lambda/shims.js`, `${server_directory}/shims.js`)
 
   builder.log.minor('Building AWS Lambda server function.')

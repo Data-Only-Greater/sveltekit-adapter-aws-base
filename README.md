@@ -68,11 +68,12 @@ handler and lambda@edge router. They are defined as follows:
 
 **Kind**: global function
 
-| Param          | Type                | Default                        | Description                                                                                            |
-| -------------- | ------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| builder        | <code>any</code>    |                                | <p>The SvelteKit provided [Builder](https://kit.svelte.dev/docs/types#public-types-builder) object</p> |
-| artifactPath   | <code>string</code> | <code>&quot;build&quot;</code> | <p>The path where to place to SvelteKit files</p>                                                      |
-| esbuildOptions | <code>any</code>    |                                | <p>Options to pass to esbuild</p>                                                                      |
+| Param          | Type                 | Default                        | Description                                                                                            |
+| -------------- | -------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| builder        | <code>any</code>     |                                | <p>The SvelteKit provided [Builder](https://kit.svelte.dev/docs/types#public-types-builder) object</p> |
+| artifactPath   | <code>string</code>  | <code>&quot;build&quot;</code> | <p>The path where to place to SvelteKit files</p>                                                      |
+| esbuildOptions | <code>any</code>     |                                | <p>Options to pass to esbuild</p>                                                                      |
+| streaming      | <code>boolean</code> | <code>false</code>             | <p>Use Lambda response streaming</p>                                                                   |
 
 <a name="buildOptions"></a>
 
