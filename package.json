@@ -44,6 +44,7 @@
     "@babel/core": "^7.21.3",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.21.0",
+    "@sveltejs/kit": "^1.15.2",
     "@types/fs-extra": "^11.0.1",
     "@vitest/coverage-c8": "^0.29.7",
     "copyfiles": "^2.4.1",
@@ -61,8 +62,8 @@
     "set-cookie-parser": "^2.5.1"
   },
   "peerDependencies": {
-		"@sveltejs/kit": "^1.15.2"
-	},
+    "@sveltejs/kit": "^1.15.2"
+  },
   "release": {
     "branches": [
       "main"
