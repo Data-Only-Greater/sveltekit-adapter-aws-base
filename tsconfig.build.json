@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "target": "es2022",
-    "moduleResolution": "nodenext",
+    "module": "node16",
+    "target": "es2021",
+    "moduleResolution": "node16",
     "declaration": true,
     "strict": true,
     "noImplicitAny": true,
