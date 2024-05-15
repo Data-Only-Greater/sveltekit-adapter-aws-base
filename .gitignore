@@ -4,6 +4,6 @@
 node_modules
 dist
 coverage
-yarn.lock
+package-lock.json
 !release.config.js
 !lambda/*.js
