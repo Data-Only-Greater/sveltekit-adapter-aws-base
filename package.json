@@ -72,12 +72,7 @@
       "main"
     ],
     "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "conventionalcommits"
-        }
-      ],
+      "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       [
         "@semantic-release/changelog",
@@ -101,6 +96,7 @@
           "message": "chore(release): set `package.json` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
       ]
-    ]
+    ],
+    "preset": "conventionalcommits"
   }
 }
