@@ -27,7 +27,7 @@
   },
   "types": "./index.d.ts",
   "scripts": {
-    "build": "yarn clean && tsc --project tsconfig.build.json && yarn copy-files",
+    "build": "npm run clean && tsc --project tsconfig.build.json && npm run copy-files",
     "build:doc": "jsdoc2md --files index.ts --configure ./jsdoc2md.json > index.md",
     "clean": "rimraf dist/",
     "copy-files": "copyfiles lambda/** package.json README.md LICENSE dist",

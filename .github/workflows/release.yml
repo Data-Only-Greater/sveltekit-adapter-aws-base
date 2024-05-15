@@ -11,20 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
       - name: Install package dependencies
-        run: yarn install
+        run: npm install
       - name: Build package
-        run: yarn run build
+        run: npm run build
       - name: Install semantic release
-        run: yarn add -D semantic-release @semantic-release/changelog @semantic-release/git conventional-changelog-conventionalcommits
+        run: npm install -D semantic-release @semantic-release/changelog @semantic-release/git conventional-changelog-conventionalcommits
       - name: Semantic Release
         run: npx semantic-release
         env:
