@@ -69,12 +69,16 @@ export const handler = awslambda.streamifyResponse(
 
     responseStream = awslambda.HttpResponseStream.from(responseStream, metadata)
 
+    // Call write on the stream to trigger metadata to be sent
+    // https://github.com/aws/aws-lambda-nodejs-runtime-interface-client/blob/2ce88619fd176a5823bc5f38c5484d1cbdf95717/src/HttpResponseStream.js#L22
+    responseStream.write('')
+
     if (rendered) {
       setResponse(responseStream, rendered)
     } else {
       responseStream.end()
     }
-  }
+  },
 )
 
 // Copyright (c) 2020 [these people](https://github.com/sveltejs/kit/graphs/contributors) (MIT)
@@ -116,7 +120,7 @@ export async function setResponse(res, response) {
   if (response.body.locked) {
     res.end(
       'Fatal error: Response body is locked. ' +
-        `This can happen when the response was already read (for example through 'response.json()' or 'response.text()').`
+        `This can happen when the response was already read (for example through 'response.json()' or 'response.text()').`,
     )
     return
   }
